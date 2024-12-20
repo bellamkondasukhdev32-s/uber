@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Ride</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #map {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .cancel-button {
+            background-color: #f44336;
+        }
+        .cancel-button:hover {
+            background-color: #d32f2f;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #f44336;
+            color: white;
+            border-radius: 4px;
+        }
+        .alert.success {
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Request a Ride</h1>
+    <div id="map"></div>
+    <form id="rideForm" method="POST">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <label for="pickup_location">Pickup Location:</label>
+        <input type="text" id="pickup_location" name="pickup_location" placeholder="Enter pickup location" required><br>
+
+        <label for="dropoff_location">Dropoff Location:</label>
+        <input type="text" id="dropoff_location" name="dropoff_location" placeholder="Enter dropoff location" required><br>
+
+        <label for="ride_type">Ride Type:</label>
+        <select id="ride_type" name="ride_type" required>
+            <option value="solo">Solo (Higher Fare)</option>
+            <option value="shared">Shared (Lower Fare)</option>
+        </select><br>
+
+        <label for="vehicle_type">Vehicle Type:</label>
+        <select id="vehicle_type" name="vehicle_type" required>
+            <option value="bike">Bike</option>
+            <option value="auto">Auto</option>
+            <option value="cab">Cab</option>
+            <option value="rickshaw">Rickshaw</option>
+        </select><br>
+
+        <button type="submit">Request Ride</button>
+        <button type="button" class="cancel-button" id="cancelRide">Cancel Ride</button>
+    </form>
+
+    <script>
+        const map = L.map('map').setView([51.505, -0.09], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        let pickupMarker, dropoffMarker;
+
+        // Function to perform reverse geocoding using Nominatim
+        function reverseGeocode(lat, lng, callback) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+                .then(response => response.json())
+                .then(data => {
+                    const location = data.address;
+                    const locationName = `${location.road || ''} ${location.city || location.town || location.village || ''}, ${location.country || ''}`.trim();
+                    callback(locationName);
+                })
+                .catch(error => console.error('Error in geocoding:', error));
+        }
+
+        // Map click event for setting pickup and dropoff locations
+        map.on('click', function(e) {
+            const { lat, lng } = e.latlng;
+
+            if (!pickupMarker) {
+                reverseGeocode(lat, lng, function(locationName) {
+                    pickupMarker = L.marker([lat, lng]).addTo(map)
+                        .bindPopup("Pickup Location: " + locationName).openPopup();
+                    document.getElementById('pickup_location').value = locationName;
+                });
+            } else if (!dropoffMarker) {
+                reverseGeocode(lat, lng, function(locationName) {
+                    dropoffMarker = L.marker([lat, lng]).addTo(map)
+                        .bindPopup("Dropoff Location: " + locationName).openPopup();
+                    document.getElementById('dropoff_location').value = locationName;
+                });
+            } else {
+                alert('Both pickup and dropoff locations are already set.');
+            }
+        });
+
+        // Cancel Ride functionality
+        document.getElementById('cancelRide').addEventListener('click', function() {
+            if (pickupMarker) {
+                map.removeLayer(pickupMarker);
+                pickupMarker = null;
+            }
+            if (dropoffMarker) {
+                map.removeLayer(dropoffMarker);
+                dropoffMarker = null;
+            }
+            document.getElementById('pickup_location').value = '';
+            document.getElementById('dropoff_location').value = '';
+            alert('Ride request has been canceled.');
+        });
+    </script>
+</body>
+</html>

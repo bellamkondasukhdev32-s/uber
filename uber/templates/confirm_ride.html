@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Ride</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .ride-details {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #f44336;
+            color: white;
+            border-radius: 4px;
+        }
+        .alert.success {
+            background-color: #4CAF50;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Confirm Your Ride</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="ride-details">
+        <label for="pickup_location">Pickup Location:</label>
+        <p>{{ pickup_location }}</p>
+
+        <label for="dropoff_location">Dropoff Location:</label>
+        <p>{{ dropoff_location }}</p>
+
+        <label for="estimated_time">Estimated Time:</label>
+        <p>{{ estimated_time }} minutes</p>
+
+        <label for="fare">Fare:</label>
+        <p>${{ fare }}</p>
+
+        <label for="driver_name">Driver Name:</label>
+        <p>{{ driver_name }}</p>
+
+        <label for="driver_phone">Driver Phone:</label>
+        <p>{{ driver_phone }}</p>
+    </div>
+
+    <form action="{{ url_for('confirm_ride') }}" method="POST">
+        <button class="btn" type="submit">Book Ride</button>
+    </form>
+</body>
+</html>

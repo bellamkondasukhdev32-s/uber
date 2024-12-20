@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared Rides</title>
+</head>
+<body>
+    <h1>Shared Rides</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Pickup Location</th>
+                <th>Dropoff Location</th>
+                <th>Fare</th>
+                <th>Rider Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ride in shared_rides %}
+            <tr>
+                <td>{{ ride.pickup_location }}</td>
+                <td>{{ ride.dropoff_location }}</td>
+                <td>{{ ride.fare }}</td>
+                <td>{{ ride.rider_name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

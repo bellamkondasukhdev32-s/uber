@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Car Rental</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script>
+    
+    function calculateTotalCost() {
+      const selectedVehicle = document.getElementById('vehicle_id').value;
+      if (!selectedVehicle) {
+        document.getElementById('total_cost').innerText = 'Please select a vehicle.';
+        return;
+      }
+
+      
+      const vehicleData = selectedVehicle.split('-');
+      const vehiclePrice = parseFloat(vehicleData[1]);
+      const rentalStartDate = new Date(document.getElementById('rental_start_date').value);
+      const rentalEndDate = new Date(document.getElementById('rental_end_date').value);
+
+      
+      if (rentalStartDate && rentalEndDate && rentalEndDate >= rentalStartDate) {
+        const timeDiff = rentalEndDate - rentalStartDate;
+        const totalDays = timeDiff / (1000 * 3600 * 24); 
+        const totalCost = totalDays * vehiclePrice;
+
+        document.getElementById('total_cost').innerText = 'Total Cost: £' + totalCost.toFixed(2);
+      } else {
+        document.getElementById('total_cost').innerText = 'Please select valid dates.';
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Request Car Rental</h2>
+    <form method="POST">
+      <div class="form-group">
+        <label for="vehicle_id">Select Vehicle:</label>
+        <select id="vehicle_id" name="vehicle_id" class="form-control" onchange="calculateTotalCost()" required>
+          <option value="" disabled selected>Select a vehicle</option>
+          {% for vehicle in vehicles %}
+            <option value="{{ vehicle[0] }}-{{ vehicle[3] }}">{{ vehicle[1] }} ({{ vehicle[2] }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="rental_start_date">Rental Start Date:</label>
+        <input type="date" id="rental_start_date" name="rental_start_date" class="form-control" onchange="calculateTotalCost()" required>
+      </div>
+      <div class="form-group">
+        <label for="rental_end_date">Rental End Date:</label>
+        <input type="date" id="rental_end_date" name="rental_end_date" class="form-control" onchange="calculateTotalCost()" required>
+      </div>
+      <p id="total_cost" class="text-info">Total Cost: £0.00</p>
+      <button type="submit" class="btn btn-primary">Request Rental</button>
+    </form>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

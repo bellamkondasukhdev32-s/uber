@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard</title>
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #2d2d2d, #0f0f0f);
+            color: #fff;
+            line-height: 1.6;
+            font-size: 16px;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #00bfae;
+            text-shadow: 2px 2px 5px rgba(0, 191, 174, 0.8);
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 28px;
+            text-transform: uppercase;
+            margin-top: 40px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #00bfae;
+            font-size: 18px;
+            margin: 0 15px;
+            font-weight: bold;
+            position: relative;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #008d76;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 100%;
+            height: 3px;
+            background: #00bfae;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        nav a:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* Ride Info Layout */
+        .rides-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .ride {
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            flex: 0 0 48%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .ride:hover {
+            background: #444;
+            transform: translateY(-5px);
+        }
+
+        .ride p {
+            margin: 10px 0;
+        }
+
+        .ride p strong {
+            color: #00bfae;
+        }
+
+        .ride button {
+            background: #00bfae;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .ride button:hover {
+            background: #008d76;
+        }
+
+        
+        @media (max-width: 768px) {
+            .ride {
+                flex: 0 0 100%;
+            }
+
+            .rides-container {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Driver Dashboard</h1>
+    <nav>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        <a href="{{ url_for('add_vehicle') }}">Add Vehicle</a>
+    </nav>
+    
+    <h2>Your Assigned Rides</h2>
+
+    {% if rides %}
+        <div class="rides-container">
+            {% for ride in rides %}
+                <div class="ride">
+                    <p><strong>Pickup Location:</strong> {{ ride['pickup_location'] }}</p>
+                    <p><strong>Dropoff Location:</strong> {{ ride['dropoff_location'] }}</p>
+                    <p><strong>Fare:</strong> £{{ ride['fare'] }}</p>
+                    <p><strong>Status:</strong> {{ ride['ride_status'].capitalize() }}</p>
+
+                    <!-- Display buttons based on ride status -->
+                    <form 
+                        action="{% if ride['ride_status'] == 'requested' %} 
+                                   {{ url_for('accept_ride', ride_id=ride['ride_id']) }}
+                                {% elif ride['ride_status'] == 'accepted' %} 
+                                   {{ url_for('start_ride', ride_id=ride['ride_id']) }}
+                                {% elif ride['ride_status'] == 'started' %} 
+                                   {{ url_for('complete_ride', ride_id=ride['ride_id']) }}
+                                {% endif %}" 
+                        method="post">
+                        
+                        {% if ride['ride_status'] == 'requested' %}
+                            <button type="submit">Accept Ride</button>
+                        {% elif ride['ride_status'] == 'accepted' %}
+                            <button type="submit">Start Ride</button>
+                        {% elif ride['ride_status'] == 'started' %}
+                            <button type="submit">Complete Ride</button>
+                        {% endif %}
+                    </form>
+
+                    <!-- Show payment marking option for completed rides -->
+                    {% if ride['ride_status'] == 'completed' and not ride['payment_received'] %}
+                        <form method="POST" action="{{ url_for('mark_payment', ride_id=ride['ride_id']) }}">
+                            <button type="submit">Mark Payment as Received</button>
+                        </form>
+                    {% elif ride['payment_received'] %}
+                        <p><strong>Payment Status:</strong> Received</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No assigned rides found.</p>
+    {% endif %}
+</body>
+</html>

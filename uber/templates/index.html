@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, footer {
+            background-color: #111;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header nav, footer nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        header nav a, footer nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 5px 10px;
+        }
+
+        h1 {
+            color: #000;
+            font-size: 36px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .button {
+            background-color: #1db954; 
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 20px 10px;
+        }
+
+        .button:hover {
+            background-color: #1aa34a;
+        }
+
+        .zigzag-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 40px 0;
+            max-width: 100%;
+            padding: 0 20px;
+        }
+
+        .zigzag-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .zigzag-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .zigzag-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            max-width: 600px; 
+        }
+
+        .zigzag-item div {
+            flex: 1;
+            text-align: left;
+            padding: 20px;
+        }
+
+        footer p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Uber</h1>
+        <nav>
+            <a href="#">Ride</a>
+            <a href="#">Drive</a>
+            <a href="#">Business</a>
+            <a href="#">About</a>
+            <a href="#">EN</a>
+            <a href="#">Help</a>
+            <a href="{{ url_for('login') }}">Log in</a>
+            <a href="{{ url_for('register') }}">Sign up</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <h1 style="text-align: center;">Go Anywhere with Uber</h1>
+    <div style="text-align: center;">
+        <a href="{{ url_for('request_ride') }}" class="button">Request Ride</a>
+        <a href="{{ url_for('request_car_rental') }}" class="button">Request Car Rental</a>
+    </div>
+
+    <!-- Zigzag Section -->
+    <div class="zigzag-section">
+        <div class="zigzag-item">
+            <img src="{{ url_for('static', filename='images/uber1.jpeg') }}" alt="Ride with Uber">
+            <div>
+                <h2>Ride</h2>
+                <p>Go anywhere with Uber. Request a ride, hop in, and go.</p>
+            </div>
+        </div>
+        <div class="zigzag-item">
+            <img src="{{ url_for('static', filename='images/uber2.png') }}" alt="Courier Services">
+            <div>
+                <h2>Courier</h2>
+                <p>Uber Connect makes same-day delivery easier than ever.</p>
+            </div>
+        </div>
+        <div class="zigzag-item">
+            <img src="{{ url_for('static', filename='images/uber3.jpeg') }}" alt="Reserve a Ride">
+            <div>
+                <h2>Reserve</h2>
+                <p>Reserve your ride in advance so you can relax on the day of your trip.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>© 2024 Uber Technologies Inc.</p>
+        <nav>
+            <a href="#">About us</a>
+            <a href="#">Safety</a>
+            <a href="#">Diversity and Inclusion</a>
+            <a href="#">Sustainability</a>
+            <a href="#">Blog</a>
+            <a href="#">Careers</a>
+            <a href="#">Help Center</a>
+        </nav>
+        
+    </footer>
+</body>
+</html>

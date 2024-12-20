@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rider Dashboard</title>
+    <style>
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #0d0d0d, #222);
+            color: #f0f0f0;
+            line-height: 1.6;
+            font-size: 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #00bfae;
+            letter-spacing: -2px;
+            text-transform: capitalize;
+            text-shadow: 2px 2px 10px rgba(0, 191, 174, 0.6);
+        }
+
+        .nav-bar {
+            display: flex;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #00bfae;
+            margin-left: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            position: relative;
+            transition: color 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 100%;
+            height: 3px;
+            background: #00bfae;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #008d76;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* Rides Section */
+        .rides-section {
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .rides-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: space-between;
+            padding-bottom: 30px;
+        }
+
+        .ride-card {
+            background: linear-gradient(135deg, #333 0%, #555 100%);
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1 1 30%;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease-in-out;
+            max-width: 380px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .ride-card::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #00bfae;
+            box-shadow: 0 0 10px rgba(0, 191, 174, 0.5);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .ride-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .ride-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .ride-info p {
+            font-size: 16px;
+            color: #ddd;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .ride-info p strong {
+            color: #fff;
+            text-transform: capitalize;
+        }
+
+        .payment-form label {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .payment-select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #222;
+            margin-bottom: 15px;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .payment-select:focus {
+            outline: none;
+            background-color: #333;
+        }
+
+        .payment-btn {
+            padding: 14px 22px;
+            background-color: #00bfae;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .payment-btn:hover {
+            background-color: #008d76;
+            transform: translateY(-2px);
+        }
+
+        .payment-btn:active {
+            transform: translateY(0);
+        }
+
+        .rating-info {
+            font-size: 16px;
+            margin-top: 15px;
+            color: #ddd;
+            transition: color 0.3s ease;
+        }
+
+        .rating-info a {
+            color: #00bfae;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .rating-info a:hover {
+            color: #008d76;
+        }
+
+        /* No Rides Message */
+        .no-rides-message {
+            font-size: 18px;
+            color: #888;
+            text-align: center;
+        }
+
+        /* Car Rental Section */
+        .rental-btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background-color: #f1c40f;
+            color: white;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 30px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .rental-btn:hover {
+            background-color: #f39c12;
+            transform: translateY(-2px);
+        }
+
+        .rental-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .ride-card {
+                flex: 1 1 100%;
+            }
+
+            .rides-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="dashboard-title">Rider Dashboard</h1>
+            <nav class="nav-bar">
+                <a href="{{ url_for('request_ride') }}" class="nav-link">Request Ride</a>
+                <a href="{{ url_for('view_rentals') }}" class="nav-link">View Rentals</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            </nav>
+        </header>
+
+        <section class="rides-section">
+            <h2 class="section-title">Your Rides</h2>
+
+            {% if rides %}
+                <div class="rides-container">
+                    {% for ride in rides %}
+                        <div class="ride-card">
+                            <div class="ride-info">
+                                <p><strong>Pickup Location:</strong> {{ ride['pickup_location'] }}</p>
+                                <p><strong>Dropoff Location:</strong> {{ ride['dropoff_location'] }}</p>
+                                <p><strong>Fare:</strong> £{{ ride['fare'] }}</p>
+                                <p><strong>Status:</strong> {{ ride['ride_status'].capitalize() }}</p>
+                            </div>
+
+                            {% if ride['ride_status'] == 'completed' and ride['payment_received'] == 0 %}
+                                <form method="POST" action="{{ url_for('payment', ride_id=ride['ride_id']) }}" class="payment-form">
+                                    <label for="payment_method">Choose Payment Method:</label>
+                                    <select name="payment_method" id="payment_method" required class="payment-select">
+                                        <option value="cash">Cash</option>
+                                        <option value="online">Online</option>
+                                    </select>
+                                    <input type="hidden" name="amount" value="{{ ride['fare'] }}">
+                                    <button type="submit" class="payment-btn">Pay Now</button>
+                                </form>
+                            {% elif ride['payment_received'] == 1 %}
+                                <p><strong>Payment Status:</strong> Received</p>
+
+                                {% if ride['rating'] %}
+                                    <div class="rating-info">
+                                        <p><strong>Your Rating:</strong> {{ ride['rating']['rating'] }} Stars</p>
+                                        <p><strong>Comment:</strong> {{ ride['rating']['comment'] }}</p>
+                                    </div>
+                                {% else %}
+                                    <p class="rating-info"><strong>Rating:</strong> <a href="{{ url_for('rating', ride_id=ride['ride_id']) }}">Rate Your Ride</a></p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-rides-message">You have no current rides. Book a ride now!</p>
+            {% endif %}
+
+            <!-- Car Rental Button -->
+            <a href="{{ url_for('request_car_rental') }}" class="rental-btn">Rent a Car</a>
+        </section>
+    </div>
+</body>
+</html>

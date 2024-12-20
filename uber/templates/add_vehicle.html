@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Vehicle</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111; 
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background-color: #111;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+    }
+    header nav, footer nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    header nav a, footer nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      margin: 5px 10px;
+    }
+    .container {
+      margin-top: 50px;
+      max-width: 800px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-control {
+      background-color: #555; 
+      border: 1px solid #444;
+      color: white;
+    }
+    .btn-primary {
+      background-color: #1db954; 
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      background-color: #1aa34a;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Section -->
+  <header>
+    <h1>Uber</h1>
+    <nav>
+      <a href="#">Ride</a>
+      <a href="#">Drive</a>
+      <a href="#">Business</a>
+      <a href="#">About</a>
+      <a href="#">EN</a>
+      <a href="#">Help</a>
+      <a href="#">Log in</a>
+      <a href="#">Sign up</a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container mt-5">
+    <h2>Add Vehicle</h2>
+    <form method="POST">
+      <div class="form-group">
+        <label for="vehicle_type">Vehicle Type:</label>
+        <select name="vehicle_type" class="form-control" required>
+          <option value="bike">Bike</option>
+          <option value="cab">Cab</option>
+          <option value="auto">Auto</option>
+          <option value="rickshaw">Rickshaw</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="license_plate">License Plate:</label>
+        <input type="text" name="license_plate" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="capacity">Capacity:</label>
+        <input type="number" name="capacity" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="supported_ride_types">Supported Ride Types:</label>
+        <select name="supported_ride_types" class="form-control" required>
+          <option value="solo">Solo</option>
+          <option value="shared">Shared</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="price_per_day">Price per Day:</label>
+        <input type="number" name="price_per_day" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Vehicle</button>
+    </form>
+  </div>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>© 2024 Uber Technologies Inc.</p>
+    <nav>
+      <a href="#">About us</a>
+      <a href="#">Safety</a>
+      <a href="#">Diversity and Inclusion</a>
+      <a href="#">Sustainability</a>
+      <a href="#">Blog</a>
+      <a href="#">Careers</a>
+      <a href="#">Help Center</a>
+    </nav>
+  </footer>
+</body>
+</html>
